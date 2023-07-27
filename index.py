@@ -36,14 +36,52 @@ def calculate(): # Calculation
             total += int(entry1.get()) ** int(entry2.get())
         calculation.config(text="Geometric series is: " + str(total))
 
-# Create labels
+def small():
+    labelA.config(font=('Arial', 7))
+    labelB.config(font=('Arial', 7))
+    labelC.config(font=('Arial', 7))
+    entry1.config(font=('Arial', 7))
+    entry2.config(font=('Arial', 7))
+    entry3.config(font=('Arial', 7))
+    button1.config(font=('Arial', 7))
+    button2.config(font=('Arial', 7))
+    calculation.config(font=('Arial', 7))
+    clear.config(font=('Arial', 7))
+    
+def medium():
+    labelA.config(font=('Arial', 15))
+    labelB.config(font=('Arial', 15))
+    labelC.config(font=('Arial', 15))
+    entry1.config(font=('Arial', 15))
+    entry2.config(font=('Arial', 15))
+    entry3.config(font=('Arial', 15))
+    button1.config(font=('Arial', 15))
+    button2.config(font=('Arial', 15))
+    calculation.config(font=('Arial', 15))
+    clear.config(font=('Arial', 15))
 
+def large():
+    labelA.config(font=('Arial', 20))
+    labelB.config(font=('Arial', 20))
+    labelC.config(font=('Arial', 20))
+    entry1.config(font=('Arial', 20))
+    entry2.config(font=('Arial', 20))
+    entry3.config(font=('Arial', 20))
+    button1.config(font=('Arial', 20))
+    button2.config(font=('Arial', 20))
+    calculation.config(font=('Arial', 20))
+    clear.config(font=('Arial', 20))
+
+# Create labels
+global labelA
 labelA = Label(root, text="Num Entry")
 labelA.place(x=10, y=15)
 
+global labelB
 labelB = Label(root, text="Common Difference")
 labelB.place(x=10, y=55)
 
+global labelC
 labelC = Label(root, text="Num of Terms")
 labelC.place(x=10, y=95)
 
@@ -99,26 +137,33 @@ def fontsizer():
 
 # Create Entry Widget Input Box
 
+global entry1
 entry1 = Entry(root, width=10, font=("Helvetica", 18))
 entry1.place(x=130, y=10)
 
+global entry2
 entry2 = Entry(root, width=10, font=("Helvetica", 18))
 entry2.place(x=130, y=50)
 
+global entry3
 entry3 = Entry(root, width=10, font=("Helvetica", 18))
 entry3.place(x=130, y=90)
 
 # Create Buttons
+global button1
 var = IntVar()
 button1 = Radiobutton(root, text="Switch Operation", command=switch, variable = var, value = 1)
 button1.place(x=10, y=130)
 
+global button2
 button2 = Radiobutton(root, text="Calculate", command=calculate, variable = var, value = 2)
 button2.place(x=70, y=130)
 
+global calculation
 calculation = Label(root, text="")
 calculation.place(x=10, y=160)
 
+global clear
 clear = Button(root, width=5, text="Clear", command=lambda: calculation.config(text=""))
 clear.place(x=10, y=190)
 
@@ -139,8 +184,9 @@ menufile.add_command(label="Switch Theme", command=switchtheme)
 menufile.add_separator()
 menufile.add_command(label="Exit", command=root.destroy)
 
-menufont.add_command(label="1")
-menufont.add_command(label="2")
+menufont.add_command(label="small", command=small)
+menufont.add_command(label="medium", command=medium)
+menufont.add_command(label="large", command=large)
 
 menutran.add_command(label="English")
 menutran.add_command(label="French")
