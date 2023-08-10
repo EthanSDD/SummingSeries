@@ -23,19 +23,28 @@ def switch(selection): # Changing Operation
     operation = selection.casefold()
     
 def calculate(): # Calculation
+    # replacing entry boxes as one lettered variables to simplify code
+    f = int(entry1.get())
+    c = int(entry2.get())
+    n = int(entry3.get())
     if entry1.get() == '' or entry2.get() == '' or entry3.get() == '':
         calculation.configure(text="Error: Input a number in all fields!")
+    # arithmetic series calculation
     elif operation == "arithmetic":
-        total = 0
-        for i in range(int(entry3.get())):
-            if int(entry3.get()) >= 0:
+        total = f
+        for i in range(n-1):
+            if n >= 0:
                 calculation.configure(text="Error, Do not input 0!")
-            total += (int(entry3.get()) / 2) * (2 * int(entry1.get())) + int(entry3.get()) - 1 * int(entry2.get())
+            f=f+c
+            total=total+f
+#(int(entry3.get()) / 2) * (2 * int(entry1.get())) + int(entry3.get()) - 1 * int(entry2.get())
         calculation.configure(text="Arithmetic series is: " + str(total))
     else:
-        total = 0
-        for i in range(int(entry3.get())):
-            total += int(entry1.get()) ** int(entry2.get())
+        # geometric series calculation
+        total = f
+        for i in range(n-1):
+            f=f*c
+            total=total+f
         calculation.configure(text="Geometric series is: " + str(total))
 
 # Sizing
