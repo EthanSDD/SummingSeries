@@ -1,65 +1,81 @@
 from tkinter import *
 from tkinter import font
+from tkinter import messagebox
 from customtkinter import *
 
 root = CTk()
 root.title("Calculator")
-root.geometry("350x440")
+root.geometry("345x470")
+root.minsize(345, 470)
+set_widget_scaling(1.8)
 
 default_font = font.nametofont("TkDefaultFont")  # Get default font value into Font object
 print(default_font.actual())
 
-min_width = 200
-min_height = 250
-root.minsize(min_width, min_height)
-set_widget_scaling(1.8)
-
 # Functions
 
-operation = "arithmetic"
+operation = StringVar()
 
 def switch(selection): # Changing Operation
     global operation
-    operation = selection.casefold()
+    operation.set(selection)
     
 def calculate(): # Calculation
-    # replacing entry boxes as one lettered variables to simplify code
-    f = int(entry1.get())
-    c = int(entry2.get())
-    n = int(entry3.get())
-    if entry1.get() == '' or entry2.get() == '' or entry3.get() == '':
-        calculation.configure(text="Error: Input a number in all fields!")
-    # arithmetic series calculation
-    elif operation == "arithmetic":
-        total = f
-        for i in range(n-1):
-            if n >= 0:
-                calculation.configure(text="Error, Do not input 0!")
-            f=f+c
-            total=total+f
-#(int(entry3.get()) / 2) * (2 * int(entry1.get())) + int(entry3.get()) - 1 * int(entry2.get())
-        calculation.configure(text="Arithmetic series is: " + str(total))
-    else:
-        # geometric series calculation
-        total = f
-        for i in range(n-1):
-            f=f*c
-            total=total+f
-        calculation.configure(text="Geometric series is: " + str(total))
+    try:
+        i=0
+        # replacing entry boxes as one lettered variables to simplify code
+        f = float(entry1.get())
+        c = float(entry2.get())
+        n = int(entry3.get())
+
+        if n <= 0:
+            calculation.configure(text="Error: Input values above 0!")
+        elif n > 999999:
+            calculation.configure(text="Error: Integer overflow, input less")
+        else:
+            opVal = operation.get()
+            # Arithmetic series calculation
+            if opVal == "Arithmetic":
+                total = f
+                while i in range(n-1):
+                    f=f+c
+                    total=total+f
+                    i += 1
+                calculation.configure(text="Arithmetic series is: " + "\n" + str(total))
+            elif opVal == "Geometric":
+                # Geometric series calculation
+                total = f
+                while i in range(n-1):
+                    f=f*c
+                    total=total+f
+                    i += 1
+                calculation.configure(text="Geometric series is: " + "\n" + str(total))
+    except ValueError:
+        calculation.configure(text="Error: Input only numbers")
+    except OverflowError:
+        calculation.configure(text="Error: Integer overflow, input less")
 
 # Sizing
 
 def small():
-    root.geometry("200x250")
     set_widget_scaling(1.0)
+    root.minsize(190, 260)
+    root.geometry("190x260")
     
 def medium():
-    root.geometry("350x440")
     set_widget_scaling(1.8)
+    root.minsize(345, 470)
+    root.geometry("345x470")
 
 def large():
-    root.geometry("490x620")
-    set_widget_scaling(2.5)
+    set_widget_scaling(2.4)
+    root.minsize(470, 630)
+    root.geometry("470x630")
+
+# About popup
+
+def about():
+    messagebox.showinfo("About", "A Summing Series calculator. \n By Sahaj & Ethan \n\n https://github.com/EthanSDD/SummingSeries \n Licensed under GPL-3.0")
 
 # Create labels
 
@@ -77,7 +93,7 @@ termsLabel.place(x=10, y=90)
 
 global calculation
 calculation = CTkLabel(root, text="", font=("Arial", 10))
-calculation.place(x=10, y=210)
+calculation.place(x=10, y=225)
 
 # Translator
 
@@ -100,19 +116,17 @@ entry3.place(x=110, y=90)
 
 # Create Buttons
 
-global switchButton
-var = IntVar()
-switchButton = CTkSegmentedButton(root, values=["Arithmetic", "Geometric"], variable=var, command=switch, font=("Arial", 10))
-switchButton.place(x=10, y=130)
-switchButton.set("Arithmetic")
+arithmeticButton = CTkRadioButton(root, text="Arithmetic", variable=operation, value="Arithmetic", command=lambda: switch("Arithmetic"), font=("Arial", 10))
+arithmeticButton.place(x=10, y=130)
 
-global calcButton
+geometricButton = CTkRadioButton(root, text="Geometric", variable=operation, value="Geometric" ,command=lambda: switch("Geometric"), font=("Arial", 10))
+geometricButton.place(x=10, y=160)
+
 calcButton = CTkButton(root, width=170, text="Calculate", command=calculate, font=("Arial", 10))
-calcButton.place(x=10, y=170)
+calcButton.place(x=10, y=190)
 
-global clear
-clear = CTkButton(root, width=40, text="Clear", command=lambda: calculation.configure(text=""), font=("Arial", 10))
-clear.place(x=140, y=130)
+clear = CTkButton(root, width=80, text="Clear", command=lambda: calculation.configure(text=""), font=("Arial", 10))
+clear.place(x=100, y=140)
 
 # Create File toolbar
 
@@ -129,7 +143,7 @@ menubar.add_cascade(label="Theme", menu=menuthem)
 menubar.add_cascade(label="Sizing", menu=menufont)
 menubar.add_cascade(label="Translate", menu=menutran)
 
-menufile.add_command(label="About")
+menufile.add_command(label="About", command=about)
 menufile.add_separator()
 menufile.add_command(label="Exit", command=root.destroy)
 
