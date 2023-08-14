@@ -1,3 +1,8 @@
+#Installation
+pip install tkinter
+pip install customtkinter
+pip install googletrans==4.0.0rc1
+
 # SummingSeries Documentation for Changes in Code
 Commit #1
 Create index.py
@@ -26,3 +31,7 @@ The calculations for arithmetic and geometric series were finalised, with both p
 Commit #7
 Converted operation switching:
 Operation switching was changed back to a radiobutton design as it was required for the assessment task. Calculations were improved with increased resilience and error handling which improves user experience. Furthermore, the calculation was altered to manipulate float numbers, which increases the possibilities for the user. Added an "about" message to give an overview of the GUI, to inform user of what exactly the program is. General sizing changes and movement of widgets were also completed to clean up the interface.
+
+Commit #8
+Translation
+Translation module completed, integrated in the file menu and affecting all translatable fields. Uses beta GoogleTrans module, containing all the google translate languages. Translation is intensive and hardware dependent, it can take some time so patience is necessary. English is the default language, dictionaries were put in place for parsing the languages.
