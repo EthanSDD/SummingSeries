@@ -1,5 +1,6 @@
 # SummingSeries Documentation for Changes in Code
 Commit #1
+Create index.py
 Creation of Summing Series repository and beginning of code. The layout has been outlined with entry boxes for First Term, Number of terms and common difference/ratio (adjacent labels). Buttons for switch operation has been added to easily switch from arithmetic series to geometric series. As well as calculate button and a clear button for easily displaying the final sum and clearing the output for next usage.
 
 Commit #2
