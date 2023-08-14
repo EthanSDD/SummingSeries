@@ -1,16 +1,14 @@
 from tkinter import *
-from tkinter import font
 from tkinter import messagebox
 from customtkinter import *
+from googletrans import *
+from googletrans import Translator, LANGUAGES
 
 root = CTk()
 root.title("Calculator")
 root.geometry("345x470")
 root.minsize(345, 470)
 set_widget_scaling(1.8)
-
-default_font = font.nametofont("TkDefaultFont")  # Get default font value into Font object
-print(default_font.actual())
 
 # Functions
 
@@ -19,7 +17,9 @@ operation = StringVar()
 def switch(selection): # Changing Operation
     global operation
     operation.set(selection)
-    
+
+calcErrors = ["Error:", "Input values above 0!", "Integer overflow, input less", "Input only numbers"]
+sumDisplay = ["{} series is:", "Arithmetic", "Geometric"]    
 def calculate(): # Calculation
     try:
         i=0
@@ -29,9 +29,9 @@ def calculate(): # Calculation
         n = int(entry3.get())
 
         if n <= 0:
-            calculation.configure(text="Error: Input values above 0!")
+            calculation.configure(text=f"{calcErrors[0]} {calcErrors[1]}")
         elif n > 999999:
-            calculation.configure(text="Error: Integer overflow, input less")
+            calculation.configure(text=f"{calcErrors[0]} {calcErrors[2]}")
         else:
             opVal = operation.get()
             # Arithmetic series calculation
@@ -41,7 +41,7 @@ def calculate(): # Calculation
                     f=f+c
                     total=total+f
                     i += 1
-                calculation.configure(text="Arithmetic series is: " + "\n" + str(total))
+                calculation.configure(text=f"{sumDisplay[0].format(sumDisplay[1])}\n{str(total)}")
             elif opVal == "Geometric":
                 # Geometric series calculation
                 total = f
@@ -49,11 +49,11 @@ def calculate(): # Calculation
                     f=f*c
                     total=total+f
                     i += 1
-                calculation.configure(text="Geometric series is: " + "\n" + str(total))
+                calculation.configure(text=f"{sumDisplay[0].format(sumDisplay[2])}\n{str(total)}")
     except ValueError:
-        calculation.configure(text="Error: Input only numbers")
+        calculation.configure(text=f"{calcErrors[0]} {calcErrors[3]}")
     except OverflowError:
-        calculation.configure(text="Error: Integer overflow, input less")
+        calculation.configure(text=f"{calcErrors[0]} {calcErrors[2]}")
 
 # Sizing
 
@@ -75,7 +75,10 @@ def large():
 # About popup
 
 def about():
-    messagebox.showinfo("About", "A Summing Series calculator. \n By Sahaj & Ethan \n\n https://github.com/EthanSDD/SummingSeries \n Licensed under GPL-3.0")
+    messagebox.showinfo(transDict["aboutMessageBox"][0], 
+                    f"{transDict['aboutMessageBox'][1]} \n By Sahaj & Ethan \n\n \
+                    https://github.com/EthanSDD/SummingSeries \n \
+                    {transDict['aboutMessageBox'][2].format('GPL-3.0')}")
 
 # Create labels
 
@@ -97,8 +100,78 @@ calculation.place(x=10, y=225)
 
 # Translator
 
-def translation():
-    "hi"
+transDict = { # Translated text
+    "labels" : ["Num Entry", "Common Difference", "Num of Terms"],
+    "buttons" : ["Clear", "Calculate"],
+    "radiobuttons" : ["Arithmetic", "Geometric"],
+    "title" : ["Calculator"],
+    "filemenu" : ["File", "Theme", "Sizing", "Translate", "About", "Exit", "Dark", "Light",
+                   "Small", "Medium", "Large"],
+    "sameLang" : ["You cannot change the program to the same language"],
+    "aboutMessageBox" : ["About", "A Summing Series calculator.", "Licensed under {}"],
+    "errors" : ["Error:", "Input values above 0!", "Integer overflow, input less", "Input only numbers"],  
+    "sum" : ["{} series is:", "Arithmetic", "Geometric"]
+}
+
+english = transDict.copy()
+translator = Translator()
+sameLang = "Cannot change to the same language"
+currentLang = "english"
+
+def translate(language):
+    global english
+    global transDict
+    global sameLang
+    global currentLang
+    global dictBefore
+    global calcErrors
+    global sumDisplay
+
+    dictBefore = transDict.copy()
+
+    if language == currentLang:
+        messagebox.showerror(transDict["errors"][0], sameLang)
+        return
+    
+    currentLang = language
+
+    if language != "en":
+        for key in transDict:
+            transDict[key] = [translator.translate(text, dest = language, src = "en").text for text in transDict[key]]
+    else:
+        transDict = english
+    
+    numLabel.configure(text = transDict["labels"][0])
+    diffLabel.configure(text = transDict["labels"][1])
+    termsLabel.configure(text = transDict["labels"][2])
+    clear.configure(text = transDict["buttons"][0])
+    calcButton.configure(text = transDict["buttons"][1])
+    arithmeticButton.configure(text = transDict["radiobuttons"][0])
+    geometricButton.configure(text = transDict["radiobuttons"][1])
+
+    root.title(transDict["title"][0])
+
+    menubar.entryconfigure(dictBefore["filemenu"][0], label = transDict["filemenu"][0])
+    menubar.entryconfigure(dictBefore["filemenu"][1], label = transDict["filemenu"][1])
+    menubar.entryconfigure(dictBefore["filemenu"][2], label = transDict["filemenu"][2])
+    menubar.entryconfigure(dictBefore["filemenu"][3], label = transDict["filemenu"][3])
+    
+    menufile.entryconfigure(dictBefore["filemenu"][4], label = transDict["filemenu"][4])
+    menufile.entryconfigure(dictBefore["filemenu"][5], label = transDict["filemenu"][5])
+    
+    menuthem.entryconfigure(dictBefore["filemenu"][6], label = transDict["filemenu"][6])
+    menuthem.entryconfigure(dictBefore["filemenu"][7], label = transDict["filemenu"][7])
+    
+    menufont.entryconfigure(dictBefore["filemenu"][8], label = transDict["filemenu"][8])
+    menufont.entryconfigure(dictBefore["filemenu"][9], label = transDict["filemenu"][9])
+    menufont.entryconfigure(dictBefore["filemenu"][10], label = transDict["filemenu"][10])
+
+    sameLang = transDict["sameLang"][0]
+    calcErrors = transDict["errors"]
+    sumDisplay = transDict["sum"]
+
+    calculate()
+    dictBefore = transDict
 
 # Create Entry Widget Input Box
 
@@ -154,7 +227,8 @@ menufont.add_command(label="Small", command=small)
 menufont.add_command(label="Medium", command=medium)
 menufont.add_command(label="Large", command=large)
 
-menutran.add_command(label="English")
-menutran.add_command(label="French")
+languages = LANGUAGES
+for acronym, langName in languages.items():
+    menutran.add_command(label = langName, command = lambda _ = acronym: translate(_))
 
 root.mainloop()
